@@ -3,7 +3,7 @@ services:
   go: # サービス名
     build: # ビルドに使うDockerファイルのパス
       context: .
-      dockerfile: ./go_docker/Dockerfile
+      dockerfile: ./docker_go/Dockerfile
     tty: true # コンテナの永続化
     environment:
       MYSQL_USER: 'user'
