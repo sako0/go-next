@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func Connect() *gorm.DB {
+func Open() *gorm.DB {
 	user := os.Getenv("MYSQL_USER")
 	password := os.Getenv("MYSQL_PASSWORD")
 	host := os.Getenv("MYSQL_HOST")
@@ -19,6 +19,7 @@ func Connect() *gorm.DB {
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
+		log.Println("databaseへの接続に失敗しました")
 		log.Println(dsn)
 	}
 	return db

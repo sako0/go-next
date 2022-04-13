@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"go-react/database"
@@ -20,13 +20,29 @@ func UserTest() echo.HandlerFunc {
 }
 func ShowUser() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		db := database.Connect()
+		db := database.Open()
 		user := model.User{}
 		id := c.Param("id")
 		db.Where("id = ?", id).First(&user)
-		if user.ID == "" {
+		if user.ID == 0 {
 			return c.JSON(http.StatusOK, nil)
 		}
 		return c.JSON(http.StatusOK, user)
+	}
+}
+func CreateUser() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		db := database.Open()
+		user := new(model.User)
+		if err := c.Bind(user); err != nil {
+			return err
+		}
+
+		// user := model.User{Name: name, Email: email}
+
+		result := db.Create(&user) // pass pointer of data to Create
+
+		return c.JSON(http.StatusOK, result.Error)
+
 	}
 }

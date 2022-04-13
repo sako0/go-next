@@ -6,7 +6,8 @@ services:
       dockerfile: ./docker_go/Dockerfile
     tty: true # コンテナの永続化
     environment:
-      MYSQL_USER: 'user'
+      GOPATH: '/go'
+      MYSQL_USER: 'root'
       MYSQL_PASSWORD: 'pass'
       MYSQL_DATABASE: 'go_development'
       MYSQL_HOST: 'db'
@@ -22,15 +23,14 @@ services:
     image: mysql:8.0.28
     ports:
       - '3306:3306'
+    # 記載はしているが基本的に下記は使う予定はない
     volumes:
-      - go_mysql_data:/var/lib/mysql
-      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-    command: --default-authentication-plugin=mysql_native_password
+        #mysql.cnfを反映させるためのディレクトリ
+      - ./mysql/conf.d:/etc/mysql/conf.d
+        #DBの実体を残したい場合にはコメントアウトを外す
+      # - ./mysql/data:/var/lib/mysql
+        #MySQL初回起動時に実行するsqlやsh等を渡すためのディレクトリ
+      - ./mysql/init:/docker-entrypoint-initdb.d
     environment:
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'pass'
+      MYSQL_ROOT_PASSWORD: "pass"
       MYSQL_DATABASE: 'go_development'
-      MYSQL_HOST: 'db'
-      MYSQL_PORT: '3306'
-volumes:
-  go_mysql_data:
